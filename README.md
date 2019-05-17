@@ -7,5 +7,5 @@
 ### Running tests:
 <pre><code>pipenv run python -m pytest .</code></pre>
 
-### Running demo
+### Running demo:
 <pre><code>pipenv run python demo.py </code></pre>
