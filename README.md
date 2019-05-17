@@ -1,5 +1,5 @@
 # demo-conv
-## Demo project - implementation of Depthwise Separable Convolution (forward pass)
+#### Demo project - implementation of Depthwise Separable Convolution (forward pass)
 
 ### Installing dependencies:
 <pre><code>pipenv install</code></pre>
