@@ -226,4 +226,28 @@ def test_separable_conv2d_expected_and_against_tf(input_t, dweights, pweights, e
     assert (out == out_tf).all()
     assert (out == expected).all()
 
+@pytest.mark.parametrize('seed, input_t_shape, dweights_shape, pweights_shape', [
+    (0, (1, 3, 16, 16), (3, 1, 1), (10, 3)),
+    (1, (1, 3, 3, 3), (3, 3, 3), (10, 3)),
+    (2, (1, 5, 256, 256), (5, 5, 5), (10, 5)),
+    (3, (1, 5, 256, 256), (5, 3, 3), (10, 5)),
+    (4, (1, 5, 256, 256), (5, 2, 2), (10, 5)),
+    (5, (1, 1, 256, 128), (1, 3, 3), (10, 1)),
+    (6, (1, 1, 128, 256), (1, 3, 3), (10, 1)),
+    (7, (1, 1, 7, 13), (1, 5, 7), (10, 1)),
+    (8, (1, 1, 7, 13), (1, 5, 7), (10, 1)),
+    (9, (1, 1, 1, 1), (1, 3, 3), (10, 1)),
+])
+def test_separable_conv2d_against_tf_random(
+        seed, input_t_shape, dweights_shape, pweights_shape):
+    np.random.seed(seed)
+    input_t = np.random.rand(*input_t_shape)
+    dweights = np.random.rand(*dweights_shape)
+    pweights = np.random.rand(*pweights_shape)
+    _, C, H, W = input_t.shape
+    _, R_H, R_W =  dweights.shape
+    F, _ = pweights.shape
+    out = separable_conv2d(C, H, W, R_H, R_W, F, input_t, dweights, pweights)
+    out_tf = init_separable_conv2d_tf(C, H, W, R_H, R_W, F)(input_t, dweights, pweights)
+    np.testing.assert_allclose(out, out_tf, rtol=1e-6)
 
