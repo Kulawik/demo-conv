@@ -173,6 +173,49 @@ def test_separable_conv2d_tf_example():
              [0, 0, 0]],
         ], dtype=np.float32),
         ),
+        
+        ( # set 3, in 1x3x3, f 3x3, out 3
+        np.array([[  #  input_t 
+        [[1, 1, 1], [1, 1, 1], [1, 1, 1]],
+        ]], dtype=np.float32),
+        np.array([#  dweights
+        [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]],
+        ], dtype=np.float32),
+        np.array([#  pweights
+        [1], [0], [2]
+        ], dtype=np.float32),
+        np.array([#  expected
+            [[-4, -6, -4],
+             [-6, -9, -6],
+             [-4, -6, -4]],
+            [[-0, -0, -0],
+             [-0, -0, -0],
+             [-0, -0, -0]],
+            [[-8, -12, -8],
+             [-12, -18, -12],
+             [-8, -12, -8]],
+        ], dtype=np.float32),
+        ),
+        
+        ( # set 4, in 1x2x2, f 3x3, out 3
+        np.array([[  #  input_t 
+        [[1, 2], [3, 4]],
+        ]], dtype=np.float32),
+        np.array([#  dweights
+        [[1, 1, 1], [2, 2, 2], [3, 3, 3]],
+        ], dtype=np.float32),
+        np.array([#  pweights
+        [1], [0], [2]
+        ], dtype=np.float32),
+        np.array([#  expected
+            [[27, 27],
+             [17, 17]],
+            [[0, 0],
+             [0, 0]],
+            [[54, 54],
+             [34, 34]],
+        ], dtype=np.float32),
+        ),
 ])
 def test_separable_conv2d_expected_and_against_tf(input_t, dweights, pweights, expected):
     _, C, H, W = input_t.shape
@@ -182,4 +225,5 @@ def test_separable_conv2d_expected_and_against_tf(input_t, dweights, pweights, e
     out_tf = init_separable_conv2d_tf(C, H, W, R_H, R_W, F)(input_t, dweights, pweights)
     assert (out == out_tf).all()
     assert (out == expected).all()
+
 
