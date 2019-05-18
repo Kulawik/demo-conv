@@ -13,10 +13,7 @@ def separable_conv2d(C, H, W, R_H, R_W, F, input_t, dweights, pweights):
             for w in range(W):
                 dout_t[c, h, w] = np.sum(
                        padded_t[c, h:(h+R_H), w:(w+R_W)] * dweights[c, :, :])
-    for f in range(F):
-        for h in range(H):
-            for w in range(W):
-                out_t[f, h, w] = np.dot(dout_t[:, h, w], pweights[f]) 
+    out_t = np.tensordot(pweights, dout_t, axes=([1],[0]))
     return out_t
 
 def init_separable_conv2d_tf(C, H, W, R_H, R_W, F):
